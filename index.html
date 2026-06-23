@@ -194,7 +194,7 @@
             
             // Якщо опису немає, ставимо заглушку. Замінюємо переноси рядків на <br>
             const desc = p['Опис'] || 'Опис скоро з\'явиться...';
-            document.getElementById('detail-desc').innerHTML = desc.replace(/\n/g, '<br>');
+            document.getElementById('detail-desc').innerText = desc.replace(/\n\s*\n/g, '\n');
 
             // Карусель картинок
             const images = p['Фото_URL'].split(',').map(url => url.trim());
