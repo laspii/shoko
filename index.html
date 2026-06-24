@@ -21,106 +21,42 @@
 
         #loader { display: flex; justify-content: center; align-items: center; height: 100vh; font-weight: bold; }
 
-        /* --- ІДЕАЛЬНА КВАДРАТНА МОЗАЇКА (1:3) --- */
-        #product-grid { 
-            display: none; 
-            flex-direction: column; 
-            gap: 2px; /* Мінімальний зазор між товарами */
-            width: 100vw; 
-            background-color: var(--bg-color);
-            padding-bottom: 20px;
-        }
-
-        .product-card {
-            display: grid;
-            width: 100vw;
-            gap: 2px; /* Зазор між великою і малою колонками */
-            /* Непарні ряди: мініатюри (1 частина) зліва, велике фото (3 частини) справа */
-            grid-template-columns: 1fr 3fr; 
-            cursor: pointer;
-        }
-
-        /* Парні ряди: велике фото зліва, мініатюри справа */
-        .product-card:nth-child(even) {
-            grid-template-columns: 3fr 1fr;
-        }
-
-        /* Зміна порядку DOM-елементів для дзеркального відображення */
-        .product-card:nth-child(even) .main-col { order: 1; }
-        .product-card:nth-child(even) .thumbnails-col { order: 2; }
-
-        /* Колонка з мініатюрами */
-        .thumbnails-col {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            min-width: 0;
-        }
-
-        /* Мініатюра завжди квадратна */
-        .thumb-item {
-            width: 100%;
-            aspect-ratio: 1 / 1; 
-            background-color: rgba(0, 0, 0, 0.05); 
-            position: relative;
-            overflow: hidden;
-        }
-
-        .thumb-item img {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; display: block;
-        }
-
-        /* Колонка з великим фото */
-        .main-col {
-            position: relative;
-            min-width: 0;
-            height: 100%; /* Розтягується до висоти колонки з мініатюрами */
-        }
-
-        /* Велике фото абсолютно позиціоноване, щоб не розривати сітку */
-        .main-col img {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover;
-            display: block;
-            z-index: 1;
-        }
-
-        /* Інформація поверх великого фото */
-        .product-info-overlay {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 100%);
-            color: #ffffff;
-            padding: 12px 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            z-index: 2; /* Поверх фото */
-            pointer-events: none;
-        }
-
-        .product-info-overlay .title {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            line-height: 1.2;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-        }
-
-        .product-info-overlay .price {
+        /* --- ПЛАВАЮЧИЙ КОШИК --- */
+        #floating-cart {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--button-color);
+            color: var(--button-text-color);
+            padding: 12px 20px;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: none; /* Показується тільки якщо є товари */
+            align-items: center;
+            gap: 10px;
             font-size: 16px;
             font-weight: bold;
-            color: #ffcc00;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            z-index: 100;
+            cursor: pointer;
+            transition: transform 0.2s;
         }
+        #floating-cart:active { transform: scale(0.95); }
 
-        .cart-badge {
-            position: absolute; top: 10px; right: 10px; background-color: var(--button-color); color: var(--button-text-color);
-            border-radius: 50%; width: 26px; height: 26px; display: none; justify-content: center; align-items: center; font-size: 14px; font-weight: bold;
-            z-index: 3; /* Поверх всього */
-        }
+        /* --- ІДЕАЛЬНА КВАДРАТНА МОЗАЇКА (1:3) --- */
+        #product-grid { display: none; flex-direction: column; gap: 2px; width: 100vw; padding-bottom: 80px; }
+        .product-card { display: grid; width: 100vw; gap: 2px; grid-template-columns: 1fr 3fr; cursor: pointer; }
+        .product-card:nth-child(even) { grid-template-columns: 3fr 1fr; }
+        .product-card:nth-child(even) .main-col { order: 1; }
+        .product-card:nth-child(even) .thumbnails-col { order: 2; }
+        .thumbnails-col { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+        .thumb-item { width: 100%; aspect-ratio: 1 / 1; background-color: rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .thumb-item img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+        .main-col { position: relative; min-width: 0; height: 100%; }
+        .main-col img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; z-index: 1; }
+        .product-info-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 100%); color: #ffffff; padding: 12px 10px; display: flex; flex-direction: column; justify-content: flex-end; z-index: 2; pointer-events: none; }
+        .product-info-overlay .title { font-size: 14px; font-weight: 600; margin-bottom: 4px; line-height: 1.2; }
+        .product-info-overlay .price { font-size: 16px; font-weight: bold; color: #ffcc00; }
+        .cart-badge { position: absolute; top: 10px; right: 10px; background-color: var(--button-color); color: var(--button-text-color); border-radius: 50%; width: 26px; height: 26px; display: none; justify-content: center; align-items: center; font-size: 14px; font-weight: bold; z-index: 3; }
 
         /* --- КАРТКА ТОВАРУ --- */
         #product-view { display: none; padding-bottom: 80px; }
@@ -135,7 +71,19 @@
         .details-title { font-size: 24px; font-weight: bold; margin-bottom: 8px; }
         .details-price { font-size: 22px; color: #ffcc00; font-weight: bold; margin-bottom: 20px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
         .details-desc { font-size: 15px; line-height: 1.6; color: var(--text-color); white-space: pre-wrap; margin-bottom: 20px; }
-        .add-to-cart-btn { display: block; width: 100%; background-color: var(--button-color); color: var(--button-text-color); text-align: center; padding: 15px; border-radius: 10px; font-size: 18px; font-weight: bold; border: none; cursor: pointer; }
+        .add-to-cart-btn { display: block; width: 100%; background-color: var(--button-color); color: var(--button-text-color); text-align: center; padding: 15px; border-radius: 10px; font-size: 18px; font-weight: bold; border: none; cursor: pointer; transition: background-color 0.3s; }
+
+        /* --- ЕКРАН КОШИКА (УПРАВЛІННЯ) --- */
+        #cart-view { display: none; padding: 20px; padding-bottom: 80px; }
+        .cart-header { font-size: 22px; font-weight: bold; margin-bottom: 20px; }
+        .cart-item { display: flex; align-items: center; margin-bottom: 15px; background: rgba(0,0,0,0.03); padding: 10px; border-radius: 10px; }
+        .cart-item img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; margin-right: 15px; }
+        .cart-item-info { flex-grow: 1; }
+        .cart-item-title { font-size: 14px; font-weight: 600; line-height: 1.2; margin-bottom: 4px; }
+        .cart-item-price { font-size: 14px; color: #ffcc00; font-weight: bold; }
+        .cart-controls { display: flex; align-items: center; gap: 10px; }
+        .control-btn { background: var(--button-color); color: white; border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 16px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .cart-empty-msg { text-align: center; color: #888; margin-top: 50px; font-size: 16px; }
 
         /* --- ФОРМА ЗАМОВЛЕННЯ --- */
         #order-form { display: none; padding: 20px; box-sizing: border-box; width: 100%; }
@@ -149,6 +97,10 @@
 
     <div id="loader">Завантаження смаколиків...</div>
 
+    <div id="floating-cart" onclick="showCartView()">
+        🛒 <span id="floating-cart-sum">0 ₴</span>
+    </div>
+
     <div id="product-grid"></div>
 
     <div id="product-view">
@@ -161,8 +113,13 @@
             <div class="details-title" id="detail-title"></div>
             <div class="details-price" id="detail-price"></div>
             <div class="details-desc" id="detail-desc"></div>
-            <button class="add-to-cart-btn" onclick="addToCartFromDetail()">Додати в кошик 🛒</button>
+            <button class="add-to-cart-btn" id="add-btn" onclick="addToCartFromDetail()">Додати в кошик 🛒</button>
         </div>
+    </div>
+
+    <div id="cart-view">
+        <div class="cart-header">Ваш кошик</div>
+        <div id="cart-items-container"></div>
     </div>
 
     <div id="order-form">
@@ -203,7 +160,9 @@
         const loader = document.getElementById('loader');
         const grid = document.getElementById('product-grid');
         const productView = document.getElementById('product-view');
+        const cartView = document.getElementById('cart-view');
         const orderForm = document.getElementById('order-form');
+        const floatingCart = document.getElementById('floating-cart');
 
         async function fetchProducts() {
             try {
@@ -215,6 +174,7 @@
             }
         }
 
+        // --- ВІДМАЛЬОВКА СІТКИ ---
         function renderProducts() {
             grid.innerHTML = '';
             products.forEach(p => {
@@ -251,8 +211,10 @@
             });
             loader.style.display = 'none';
             grid.style.display = 'flex'; 
+            updateFloatingCart();
         }
 
+        // --- КАРТКА ТОВАРУ ---
         function openProduct(id) {
             const p = products.find(prod => prod.ID == id);
             if(!p) return;
@@ -261,14 +223,13 @@
             currentProductId = id;
 
             grid.style.display = 'none';
+            cartView.style.display = 'none';
+            orderForm.style.display = 'none';
             productView.style.display = 'block';
 
             document.getElementById('detail-title').innerText = p['Назва'];
             document.getElementById('detail-price').innerText = p['Ціна'] + ' ₴';
-            
-            // Виправляємо подвійні пробіли з Instagram
-            const desc = p['Опис'] || 'Опис скоро з\'явиться...';
-            document.getElementById('detail-desc').innerText = desc.replace(/\n\s*\n/g, '\n');
+            document.getElementById('detail-desc').innerText = (p['Опис'] || '').replace(/\n\s*\n/g, '\n');
 
             const images = p['Фото_URL'].split(',').map(url => url.trim());
             const carousel = document.getElementById('carousel');
@@ -277,9 +238,15 @@
             document.getElementById('btn-prev').style.display = images.length > 1 ? 'flex' : 'none';
             document.getElementById('btn-next').style.display = images.length > 1 ? 'flex' : 'none';
 
+            // Скидаємо стан кнопки
+            const btn = document.getElementById('add-btn');
+            btn.innerHTML = "Додати в кошик 🛒";
+            btn.style.backgroundColor = "var(--button-color)";
+
             tg.MainButton.hide();
             tg.BackButton.show();
-            tg.BackButton.onClick(goBackToGrid);
+            tg.BackButton.onClick(handleBackButton);
+            updateFloatingCart();
         }
 
         function changeSlide(direction) {
@@ -288,70 +255,174 @@
             carousel.scrollBy({ left: direction * width, behavior: 'smooth' });
         }
 
+        // --- ЛОГІКА ДОДАВАННЯ ТА АНІМАЦІЯ ---
         function addToCartFromDetail() {
             if (!cart[currentProductId]) cart[currentProductId] = 0;
             cart[currentProductId]++;
             
+            // Оновлюємо бейджі
             const badge = document.getElementById(`badge-${currentProductId}`);
             if(badge) {
                 badge.textContent = cart[currentProductId];
                 badge.style.display = 'flex';
             }
             
+            updateFloatingCart();
             tg.HapticFeedback.success(); 
-            goBackToGrid(); 
-        }
 
-        function goBackToGrid() {
-            currentView = 'grid';
-            productView.style.display = 'none';
-            orderForm.style.display = 'none';
-            grid.style.display = 'flex';
-            
-            tg.BackButton.offClick(goBackToGrid);
-            tg.BackButton.hide();
-            updateMainButton();
-        }
+            // Анімація кнопки (Зворотній зв'язок)
+            const btn = document.getElementById('add-btn');
+            btn.innerHTML = `✅ Додано! (${cart[currentProductId]} шт)`;
+            btn.style.backgroundColor = "#4caf50"; // Зелений колір успіху
 
-        function updateMainButton() {
-            if (currentView === 'grid') {
-                const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
-                if (totalItems > 0) {
-                    tg.MainButton.setText(`ОФОРМИТИ ЗАМОВЛЕННЯ (${totalItems} шт)`);
-                    tg.MainButton.show();
-                    tg.MainButton.onClick(showOrderForm);
-                } else {
-                    tg.MainButton.hide();
+            // Повертаємо вигляд кнопки через 1.5 секунди
+            setTimeout(() => {
+                if(currentView === 'product') {
+                    btn.innerHTML = "Додати ще 🛒";
+                    btn.style.backgroundColor = "var(--button-color)";
                 }
-            } else if (currentView === 'form') {
-                tg.MainButton.setText("ПІДТВЕРДИТИ ТА ВІДПРАВИТИ");
-                tg.MainButton.offClick(showOrderForm);
-                tg.MainButton.onClick(submitOrder);
-            }
+            }, 1500);
         }
 
-        function showOrderForm() {
-            currentView = 'form';
-            grid.style.display = 'none';
-            orderForm.style.display = 'block';
-            
-            let summaryText = '<b>Ваше замовлення:</b><br>';
+        // --- УПРАВЛІННЯ ПЛАВАЮЧИМ КОШИКОМ ---
+        function updateFloatingCart() {
+            let totalItems = 0;
             let totalSum = 0;
             
             for (const [id, count] of Object.entries(cart)) {
                 const product = products.find(p => p.ID == id);
                 if(product) {
-                    const sum = product['Ціна'] * count;
-                    totalSum += sum;
-                    summaryText += `• ${product['Назва']} - ${count} шт (${sum} ₴)<br>`;
+                    totalItems += count;
+                    totalSum += product['Ціна'] * count;
                 }
             }
-            summaryText += `<br><b>Разом: ${totalSum} ₴</b>`;
+
+            if (totalItems > 0 && (currentView === 'grid' || currentView === 'product')) {
+                document.getElementById('floating-cart-sum').innerText = `${totalSum} ₴`;
+                floatingCart.style.display = 'flex';
+            } else {
+                floatingCart.style.display = 'none';
+            }
+        }
+
+        // --- ЕКРАН УПРАВЛІННЯ КОШИКОМ ---
+        function showCartView() {
+            currentView = 'cart';
+            grid.style.display = 'none';
+            productView.style.display = 'none';
+            orderForm.style.display = 'none';
+            floatingCart.style.display = 'none';
+            cartView.style.display = 'block';
+
+            renderCartItems();
+
+            tg.BackButton.show();
+            tg.BackButton.onClick(handleBackButton);
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cart-items-container');
+            container.innerHTML = '';
+            
+            let totalSum = 0;
+            let hasItems = false;
+
+            for (const [id, count] of Object.entries(cart)) {
+                if (count > 0) {
+                    hasItems = true;
+                    const product = products.find(p => p.ID == id);
+                    if (product) {
+                        const sum = product['Ціна'] * count;
+                        totalSum += sum;
+                        const firstImage = product['Фото_URL'].split(',')[0].trim();
+
+                        container.innerHTML += `
+                            <div class="cart-item">
+                                <img src="${firstImage}" alt="Товар">
+                                <div class="cart-item-info">
+                                    <div class="cart-item-title">${product['Назва']}</div>
+                                    <div class="cart-item-price">${product['Ціна']} ₴ x ${count} = ${sum} ₴</div>
+                                </div>
+                                <div class="cart-controls">
+                                    <button class="control-btn" onclick="updateQty('${id}', -1)">-</button>
+                                    <span style="font-weight:bold; width: 16px; text-align:center;">${count}</span>
+                                    <button class="control-btn" onclick="updateQty('${id}', 1)">+</button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            }
+
+            if (hasItems) {
+                tg.MainButton.setText(`ОФОРМИТИ ЗАМОВЛЕННЯ (${totalSum} ₴)`);
+                tg.MainButton.show();
+                tg.MainButton.offClick(submitOrder);
+                tg.MainButton.onClick(showOrderForm);
+            } else {
+                container.innerHTML = '<div class="cart-empty-msg">Ваш кошик порожній 😔</div>';
+                tg.MainButton.hide();
+            }
+        }
+
+        function updateQty(id, change) {
+            if (!cart[id]) cart[id] = 0;
+            cart[id] += change;
+            
+            if (cart[id] <= 0) delete cart[id];
+            
+            // Оновлюємо бейдж на сітці у фоні
+            const badge = document.getElementById(`badge-${id}`);
+            if(badge) {
+                badge.textContent = cart[id] || 0;
+                badge.style.display = cart[id] > 0 ? 'flex' : 'none';
+            }
+
+            tg.HapticFeedback.selectionChanged();
+            renderCartItems(); // Перемальовуємо список
+            updateFloatingCart(); // Оновлюємо суми
+        }
+
+        // --- ЕКРАН ОФОРМЛЕННЯ ---
+        function showOrderForm() {
+            currentView = 'form';
+            cartView.style.display = 'none';
+            orderForm.style.display = 'block';
+            
+            let summaryText = '<b>Ваше замовлення:</b><br>';
+            let totalSum = 0;
+            for (const [id, count] of Object.entries(cart)) {
+                const product = products.find(p => p.ID == id);
+                if(product) {
+                    totalSum += product['Ціна'] * count;
+                    summaryText += `• ${product['Назва']} - ${count} шт<br>`;
+                }
+            }
+            summaryText += `<br><b>До сплати: ${totalSum} ₴</b>`;
             document.getElementById('cart-summary-text').innerHTML = summaryText;
             
-            tg.BackButton.show();
-            tg.BackButton.onClick(goBackToGrid);
-            updateMainButton();
+            tg.MainButton.setText("ПІДТВЕРДИТИ ТА ВІДПРАВИТИ");
+            tg.MainButton.offClick(showOrderForm);
+            tg.MainButton.onClick(submitOrder);
+        }
+
+        // --- НАВІГАЦІЯ (Кнопка "Назад" в Telegram) ---
+        function handleBackButton() {
+            if (currentView === 'product' || currentView === 'cart') {
+                // Повертаємось на головну (сітку)
+                currentView = 'grid';
+                productView.style.display = 'none';
+                cartView.style.display = 'none';
+                orderForm.style.display = 'none';
+                grid.style.display = 'flex';
+                
+                tg.BackButton.hide();
+                tg.MainButton.hide();
+                updateFloatingCart();
+            } else if (currentView === 'form') {
+                // З форми повертаємось в кошик
+                showCartView();
+            }
         }
 
         async function submitOrder() {
