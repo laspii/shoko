@@ -19,15 +19,13 @@
             overflow-x: hidden;
         }
 
-        /* Екран завантаження */
         #loader { display: flex; justify-content: center; align-items: center; height: 100vh; font-weight: bold; }
 
-        /* Сітка товарів */
-        /* Журнальна викладка товарів (Золотий перетин) */
+        /* --- НОВА ЖУРНАЛЬНА СІТКА --- */
         #product-grid { 
-            display: none; /* Зміниться на flex після завантаження */
+            display: none; 
             flex-direction: column; 
-            gap: 4px; /* Відстань між товарами по вертикалі */
+            gap: 4px; 
             width: 100vw; 
             background-color: var(--bg-color);
             padding-bottom: 20px;
@@ -36,41 +34,36 @@
         .product-card {
             display: grid;
             width: 100vw;
-            gap: 4px; /* Відстань між великою і малими фото */
-            /* Золотий перетин: ліва колонка 38.2%, права 61.8% */
-            grid-template-columns: 38.2fr 61.8fr; 
+            gap: 4px;
+            /* Золотий перетин. Використовуємо 38fr і 62fr для стабільності */
+            grid-template-columns: 38fr 62fr; 
             cursor: pointer;
         }
 
-        /* Кожен парний ряд міняє колонки місцями */
+        /* Шахматка для парних рядів */
         .product-card:nth-child(even) {
-            grid-template-columns: 61.8fr 38.2fr;
+            grid-template-columns: 62fr 38fr;
         }
 
-        /* Колонка з мініатюрами */
         .thumbnails-col {
             display: grid;
-            grid-template-rows: repeat(3, 1fr); /* Три рівні блоки по висоті */
+            grid-template-rows: repeat(3, 1fr); 
             gap: 4px;
+            min-width: 0; /* ЗАХИСТ ВІД РОЗРИВУ СІТКИ */
         }
 
-        /* Колонка з головним фото */
         .main-col {
             position: relative;
-            /* Задаємо пропорцію головного фото, щоб воно було великим і красивим */
             aspect-ratio: 1 / 1.15; 
             overflow: hidden;
+            min-width: 0; /* ЗАХИСТ ВІД РОЗРИВУ СІТКИ */
         }
 
-        /* Розставляємо колонки по місцях для непарних (1, 3, 5...) */
         .product-card:nth-child(odd) .thumbnails-col { grid-column: 1; }
         .product-card:nth-child(odd) .main-col { grid-column: 2; }
-
-        /* Розставляємо колонки по місцях для парних (2, 4, 6...) */
         .product-card:nth-child(even) .main-col { grid-column: 1; }
         .product-card:nth-child(even) .thumbnails-col { grid-column: 2; }
 
-        /* Спільні стилі картинок */
         .main-col img, .thumb-item img {
             width: 100%;
             height: 100%;
@@ -78,13 +71,12 @@
             display: block;
         }
 
-        /* Сірий квадратик (плейсхолдер), якщо немає додаткових фото */
         .thumb-item {
-            background-color: rgba(0, 0, 0, 0.05); /* Легкий сірий колір, адаптивний під темну тему */
+            background-color: rgba(0, 0, 0, 0.05); 
             overflow: hidden;
+            min-height: 0;
         }
 
-        /* Інформація поверх великого фото */
         .product-info-overlay {
             position: absolute;
             bottom: 0; left: 0; right: 0;
@@ -112,47 +104,28 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
         }
 
-        /* Кружечок кошика на великому фото */
         .cart-badge {
             position: absolute; top: 10px; right: 10px; background-color: var(--button-color); color: var(--button-text-color);
             border-radius: 50%; width: 26px; height: 26px; display: none; justify-content: center; align-items: center; font-size: 14px; font-weight: bold;
+            z-index: 5;
         }
-        
-        /* ---------------------------------------------------
-           НОВЕ: КАРТКА ТОВАРУ 
-           --------------------------------------------------- */
+
+        /* --- КАРТКА ТОВАРУ --- */
         #product-view { display: none; padding-bottom: 80px; }
         .carousel-container { position: relative; width: 100vw; aspect-ratio: 1/1; overflow: hidden; background: #000; }
-        
-        /* Скрол картинок свайпом */
-        .carousel { 
-            display: flex; overflow-x: auto; scroll-snap-type: x mandatory; 
-            scrollbar-width: none; /* Ховаємо скролбар */
-            height: 100%; scroll-behavior: smooth;
-        }
+        .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; height: 100%; scroll-behavior: smooth; }
         .carousel::-webkit-scrollbar { display: none; }
         .carousel img { width: 100vw; height: 100%; object-fit: cover; flex-shrink: 0; scroll-snap-align: center; }
-        
-        /* Кнопки вліво-вправо */
-        .nav-btn {
-            position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); 
-            color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 18px; 
-            cursor: pointer; z-index: 10; display: flex; justify-content: center; align-items: center;
-        }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 10; display: flex; justify-content: center; align-items: center; }
         .nav-btn.left { left: 10px; }
         .nav-btn.right { right: 10px; }
-
         .details-container { padding: 20px; }
         .details-title { font-size: 24px; font-weight: bold; margin-bottom: 8px; }
         .details-price { font-size: 22px; color: #ffcc00; font-weight: bold; margin-bottom: 20px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
         .details-desc { font-size: 15px; line-height: 1.6; color: var(--text-color); white-space: pre-wrap; margin-bottom: 20px; }
-        
-        .add-to-cart-btn {
-            display: block; width: 100%; background-color: var(--button-color); color: var(--button-text-color);
-            text-align: center; padding: 15px; border-radius: 10px; font-size: 18px; font-weight: bold; border: none; cursor: pointer;
-        }
+        .add-to-cart-btn { display: block; width: 100%; background-color: var(--button-color); color: var(--button-text-color); text-align: center; padding: 15px; border-radius: 10px; font-size: 18px; font-weight: bold; border: none; cursor: pointer; }
 
-        /* Форма замовлення */
+        /* --- ФОРМА ЗАМОВЛЕННЯ --- */
         #order-form { display: none; padding: 20px; box-sizing: border-box; width: 100%; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px; }
@@ -207,7 +180,7 @@
         
         // ==========================================
         // ВСТАВ СВІЙ URL НИЖЧЕ!
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzlEhnsBStQG9YhNWZc8fyf7jBZU5TIYiXf7fkmdtJ5-DSrwpdwNszV96tg_jIAPG_9Yw/exec";
+        const GOOGLE_SCRIPT_URL = "ТУТ_МАЄ_БУТИ_ТВІЙ_URL_ЯКИЙ_ЗАКІНЧУЄТЬСЯ_НА_/exec";
         // ==========================================
         
         let products = [];
@@ -233,31 +206,41 @@
         function renderProducts() {
             grid.innerHTML = '';
             products.forEach(p => {
-                const item = document.createElement('div');
-                item.className = 'product-item';
-                // ТЕПЕР КЛІК ВІДКРИВАЄ КАРТКУ ТОВАРУ
-                item.onclick = () => openProduct(p.ID); 
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = () => openProduct(p.ID); 
                 
-                // Беремо перше фото для сітки, якщо їх декілька
-                const firstImage = p['Фото_URL'].split(',')[0].trim();
+                const images = p['Фото_URL'].split(',').map(url => url.trim());
+                const mainImg = images[0] || 'https://via.placeholder.com/600';
+                
+                const thumb1 = images[1] ? `<img src="${images[1]}">` : '';
+                const thumb2 = images[2] ? `<img src="${images[2]}">` : '';
+                const thumb3 = images[3] ? `<img src="${images[3]}">` : '';
+
                 const count = cart[p.ID] || 0;
                 const badgeDisplay = count > 0 ? 'flex' : 'none';
 
-                item.innerHTML = `
-                    <img src="${firstImage}" alt="${p['Назва']}">
-                    <div class="cart-badge" id="badge-${p.ID}" style="display: ${badgeDisplay}">${count}</div>
-                    <div class="product-info">
-                        <div class="product-title">${p['Назва']}</div>
-                        <div class="product-price">${p['Ціна']} ₴</div>
+                card.innerHTML = `
+                    <div class="thumbnails-col">
+                        <div class="thumb-item">${thumb1}</div>
+                        <div class="thumb-item">${thumb2}</div>
+                        <div class="thumb-item">${thumb3}</div>
+                    </div>
+                    <div class="main-col">
+                        <img src="${mainImg}" alt="${p['Назва']}">
+                        <div class="cart-badge" id="badge-${p.ID}" style="display: ${badgeDisplay}">${count}</div>
+                        <div class="product-info-overlay">
+                            <div class="title">${p['Назва']}</div>
+                            <div class="price">${p['Ціна']} ₴</div>
+                        </div>
                     </div>
                 `;
-                grid.appendChild(item);
+                grid.appendChild(card);
             });
             loader.style.display = 'none';
-            grid.style.display = 'grid';
+            grid.style.display = 'flex'; 
         }
 
-        // --- ЛОГІКА КАРТКИ ТОВАРУ ---
         function openProduct(id) {
             const p = products.find(prod => prod.ID == id);
             if(!p) return;
@@ -271,20 +254,17 @@
             document.getElementById('detail-title').innerText = p['Назва'];
             document.getElementById('detail-price').innerText = p['Ціна'] + ' ₴';
             
-            // Якщо опису немає, ставимо заглушку. Замінюємо переноси рядків на <br>
+            // Виправляємо подвійні пробіли з Instagram
             const desc = p['Опис'] || 'Опис скоро з\'явиться...';
             document.getElementById('detail-desc').innerText = desc.replace(/\n\s*\n/g, '\n');
 
-            // Карусель картинок
             const images = p['Фото_URL'].split(',').map(url => url.trim());
             const carousel = document.getElementById('carousel');
             carousel.innerHTML = images.map(img => `<img src="${img}" alt="Фото">`).join('');
 
-            // Показуємо стрілки тільки якщо фото більше одного
             document.getElementById('btn-prev').style.display = images.length > 1 ? 'flex' : 'none';
             document.getElementById('btn-next').style.display = images.length > 1 ? 'flex' : 'none';
 
-            // Налаштування кнопок Telegram
             tg.MainButton.hide();
             tg.BackButton.show();
             tg.BackButton.onClick(goBackToGrid);
@@ -300,29 +280,27 @@
             if (!cart[currentProductId]) cart[currentProductId] = 0;
             cart[currentProductId]++;
             
-            // Оновлюємо бейдж на вітрині
             const badge = document.getElementById(`badge-${currentProductId}`);
             if(badge) {
                 badge.textContent = cart[currentProductId];
                 badge.style.display = 'flex';
             }
             
-            tg.HapticFeedback.success(); // Вібрація при додаванні
-            goBackToGrid(); // Повертаємось до покупок
+            tg.HapticFeedback.success(); 
+            goBackToGrid(); 
         }
 
         function goBackToGrid() {
             currentView = 'grid';
             productView.style.display = 'none';
             orderForm.style.display = 'none';
-            grid.style.display = 'grid';
+            grid.style.display = 'flex';
             
             tg.BackButton.offClick(goBackToGrid);
             tg.BackButton.hide();
             updateMainButton();
         }
 
-        // --- ЛОГІКА КОШИКА І ФОРМИ (залишилась без змін) ---
         function updateMainButton() {
             if (currentView === 'grid') {
                 const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
