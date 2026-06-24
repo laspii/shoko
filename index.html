@@ -23,22 +23,101 @@
         #loader { display: flex; justify-content: center; align-items: center; height: 100vh; font-weight: bold; }
 
         /* Сітка товарів */
-        #product-grid { display: none; grid-template-columns: repeat(3, 1fr); gap: 0; width: 100vw; }
-        .product-item { position: relative; aspect-ratio: 1 / 1; overflow: hidden; cursor: pointer; }
-        .product-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .product-info {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 100%);
-            color: #ffffff; padding: 8px 6px; display: flex; flex-direction: column; justify-content: flex-end;
-            pointer-events: none;
-        }
-        .product-title { font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .product-price { font-size: 13px; font-weight: bold; color: #ffcc00; }
-        .cart-badge {
-            position: absolute; top: 5px; right: 5px; background-color: var(--button-color); color: var(--button-text-color);
-            border-radius: 50%; width: 24px; height: 24px; display: none; justify-content: center; align-items: center; font-size: 14px; font-weight: bold;
+        /* Журнальна викладка товарів (Золотий перетин) */
+        #product-grid { 
+            display: none; /* Зміниться на flex після завантаження */
+            flex-direction: column; 
+            gap: 4px; /* Відстань між товарами по вертикалі */
+            width: 100vw; 
+            background-color: var(--bg-color);
+            padding-bottom: 20px;
         }
 
+        .product-card {
+            display: grid;
+            width: 100vw;
+            gap: 4px; /* Відстань між великою і малими фото */
+            /* Золотий перетин: ліва колонка 38.2%, права 61.8% */
+            grid-template-columns: 38.2fr 61.8fr; 
+            cursor: pointer;
+        }
+
+        /* Кожен парний ряд міняє колонки місцями */
+        .product-card:nth-child(even) {
+            grid-template-columns: 61.8fr 38.2fr;
+        }
+
+        /* Колонка з мініатюрами */
+        .thumbnails-col {
+            display: grid;
+            grid-template-rows: repeat(3, 1fr); /* Три рівні блоки по висоті */
+            gap: 4px;
+        }
+
+        /* Колонка з головним фото */
+        .main-col {
+            position: relative;
+            /* Задаємо пропорцію головного фото, щоб воно було великим і красивим */
+            aspect-ratio: 1 / 1.15; 
+            overflow: hidden;
+        }
+
+        /* Розставляємо колонки по місцях для непарних (1, 3, 5...) */
+        .product-card:nth-child(odd) .thumbnails-col { grid-column: 1; }
+        .product-card:nth-child(odd) .main-col { grid-column: 2; }
+
+        /* Розставляємо колонки по місцях для парних (2, 4, 6...) */
+        .product-card:nth-child(even) .main-col { grid-column: 1; }
+        .product-card:nth-child(even) .thumbnails-col { grid-column: 2; }
+
+        /* Спільні стилі картинок */
+        .main-col img, .thumb-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Сірий квадратик (плейсхолдер), якщо немає додаткових фото */
+        .thumb-item {
+            background-color: rgba(0, 0, 0, 0.05); /* Легкий сірий колір, адаптивний під темну тему */
+            overflow: hidden;
+        }
+
+        /* Інформація поверх великого фото */
+        .product-info-overlay {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 100%);
+            color: #ffffff;
+            padding: 12px 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            pointer-events: none;
+        }
+
+        .product-info-overlay .title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            line-height: 1.2;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .product-info-overlay .price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffcc00;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        /* Кружечок кошика на великому фото */
+        .cart-badge {
+            position: absolute; top: 10px; right: 10px; background-color: var(--button-color); color: var(--button-text-color);
+            border-radius: 50%; width: 26px; height: 26px; display: none; justify-content: center; align-items: center; font-size: 14px; font-weight: bold;
+        }
+        
         /* ---------------------------------------------------
            НОВЕ: КАРТКА ТОВАРУ 
            --------------------------------------------------- */
